@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Define the CSV file path
-csv_file_path = 'data/shehla_10_04_2023/activities.csv'
+csv_file_path = 'data/osman_10_04_2023/activities.csv'
 
 # Read the CSV file into a DataFrame
 df = pd.read_csv(csv_file_path)
@@ -24,11 +24,11 @@ runs_df = runs_df[runs_df['Year'].isin(desired_years)]
 # Filter out workouts/rows where distance is less than 2 miles
 runs_df = runs_df[runs_df['Distance'] >= 2.0]
 
-# Calculate 'Pace' in min/mile by dividing 'Elapsed Time' (in seconds) by 'Distance'
-runs_df['Pace'] = (runs_df['Elapsed Time'] / 60) / runs_df['Distance']
+# Calculate 'Pace' in min/mile by dividing 'Moving Time' (in seconds) by 'Distance'
+runs_df['Pace'] = (runs_df['Moving Time'] / 60) / runs_df['Distance']
 
 # Define the pace bins with a step size of 0.5 min/mile
-pace_bins = np.arange(9.0, 16.0, 0.25)  # Adjust the range as needed
+pace_bins = np.arange(5.5, 12.0, 0.25)  # Adjust the range as needed
 
 # Initialize lists to store average heart rate, count of data points per bin, and circle sizes for each year
 average_heart_rate_by_year = {}
@@ -55,7 +55,6 @@ for year, group in runs_df.groupby('Year'):
             average_heart_rate.append(None)  # None for bins with no data
             avg_paces.append(None)
             circle_sizes.append(0)  # Zero size for bins with no data
-    print(year, avg_paces)
     average_heart_rate_by_year[year] = average_heart_rate
     avg_pace_by_year[year] = avg_paces
     circle_sizes_by_year[year] = circle_sizes
