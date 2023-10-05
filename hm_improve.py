@@ -32,11 +32,13 @@ pace_bins = np.arange(9.0, 16.0, 0.25)  # Adjust the range as needed
 
 # Initialize lists to store average heart rate, count of data points per bin, and circle sizes for each year
 average_heart_rate_by_year = {}
+avg_pace_by_year = {}
 circle_sizes_by_year = {}
 
 # Calculate the average heart rate and count of data points for each pace bin for each year
 for year, group in runs_df.groupby('Year'):
     average_heart_rate = []
+    avg_paces = []
     circle_sizes = []
     for bin_start in pace_bins:
         bin_end = bin_start + 0.5
@@ -44,20 +46,25 @@ for year, group in runs_df.groupby('Year'):
         bin_data = group[bin_mask]
         if not bin_data.empty:
             average_hr = bin_data['Average Heart Rate'].mean()
+            average_pace = bin_data['Pace'].mean()
             num_points = len(bin_data)
             average_heart_rate.append(average_hr)
+            avg_paces.append(average_pace)
             circle_sizes.append(num_points)
         else:
             average_heart_rate.append(None)  # None for bins with no data
+            avg_paces.append(None)
             circle_sizes.append(0)  # Zero size for bins with no data
+    print(year, avg_paces)
     average_heart_rate_by_year[year] = average_heart_rate
+    avg_pace_by_year[year] = avg_paces
     circle_sizes_by_year[year] = circle_sizes
 
 # Plot the scatter plot for each year with enlarged circle sizes based on the number of data points
 plt.figure(figsize=(10, 6))
 for year in desired_years:
     plt.scatter(
-        pace_bins,
+        avg_pace_by_year[year],
         average_heart_rate_by_year[year],
         s=np.array(circle_sizes_by_year[year]) * 10,  # Enlarge dot sizes by a factor of 10
         label=f'Year {year}',
